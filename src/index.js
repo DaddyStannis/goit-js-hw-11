@@ -12,6 +12,7 @@ const refs = {
 const limit = 40;
 let page = 1;
 let prevNotifyTime = 0;
+let searchString = '';
 const lightbox = new SimpleLightbox('.gallery a');
 
 refs.searchForm.addEventListener('submit', event => {
@@ -19,7 +20,10 @@ refs.searchForm.addEventListener('submit', event => {
   refs.gallery.innerHTML = '';
   const value = event.currentTarget.elements['searchQuery'].value.trim();
   page = 1;
-  requestImages(value, page, limit, responseHandler);
+  if (value.length) {
+    searchString = value;
+    requestImages(searchString, page, limit, responseHandler);
+  }
 });
 
 window.addEventListener(
@@ -30,9 +34,8 @@ window.addEventListener(
     const clientHeight = document.documentElement.clientHeight;
 
     if (scrollTop + clientHeight > scrollHeight - 400) {
-      const value = refs.searchForm.elements['searchQuery'].value.trim();
       ++page;
-      requestImages(value, page, limit, responseHandler);
+      requestImages(searchString, page, limit, responseHandler);
     }
   }, 500)
 );
